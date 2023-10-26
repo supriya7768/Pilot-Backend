@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.ts.dao.LeadFormRepository;
 import com.ts.model.LeadForm;
-import com.ts.model.LeadProjection;
 
 @Service
 public class LeadFormService {
@@ -19,7 +18,10 @@ public class LeadFormService {
 		return lr.save(leadForm);
 	}
 	
-	 public List<LeadProjection> getLeadDataByName(String name) {
-	        return lr.findByName(name);
-	    }
+
+	public List<LeadForm> getAllLeadData() {
+	    // Modify this method to retrieve all lead data
+	    return lr.findAll(); // Assuming findAll() method exists in your repository
+	}
+
 }
