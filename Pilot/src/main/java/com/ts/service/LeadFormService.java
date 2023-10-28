@@ -15,9 +15,16 @@ public class LeadFormService {
 	LeadFormRepository lr;
 	
 	public LeadForm addLead(LeadForm leadForm) {
-		return lr.save(leadForm);
+
+		if (lr.findByEmail(leadForm.getEmail()).isPresent()) {
+			return new LeadForm();
+		}
+		if (lr.findByMobile(leadForm.getMobile()).isPresent()) {
+			return new LeadForm();
+		} else {
+			return lr.save(leadForm);
+		}
 	}
-	
 
 	public List<LeadForm> getAllLeadData() {
 	    // Modify this method to retrieve all lead data
