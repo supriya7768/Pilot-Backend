@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +36,8 @@ public class LeadFormController {
 	}
 	
 	@DeleteMapping("/delete-lead")
-	public void delete(LeadForm leadForm) {
-		ls.delete(leadForm);
+	public void delete(@RequestParam("") String email) {
+		ls.delete(email);
 	}
 
 	

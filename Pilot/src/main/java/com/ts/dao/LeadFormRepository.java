@@ -13,6 +13,8 @@ public interface LeadFormRepository extends JpaRepository<LeadForm, Long> {
 	Optional<LeadForm> findByEmail(String email);
 
 	Optional<LeadForm> findByMobile(String mobile);
+
 	
+	void deleteById(Long id);
 }
 

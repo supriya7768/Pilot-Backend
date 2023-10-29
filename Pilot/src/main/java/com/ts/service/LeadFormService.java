@@ -1,6 +1,7 @@
 package com.ts.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,16 @@ public class LeadFormService {
 	    return lr.findAll(); // Assuming findAll() method exists in your repository
 	}
 
-	public void delete(LeadForm leadForm) {
-		lr.delete(leadForm);
+	public void delete(String email) {
+		Optional<LeadForm> user = lr.findByEmail(email);
+		
+		if (user.isPresent()) {
+			LeadForm leadForm = user.get();
+			lr.delete(leadForm);
+		}else {
+			
+		}
+		
 	}
 
 }
