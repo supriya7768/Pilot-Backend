@@ -31,8 +31,6 @@ public class LeadFormService {
 	    return lr.findAll(); // Assuming findAll() method exists in your repository
 	}
 
-	public void delete(LeadForm leadForm) {
-		lr.delete(leadForm);
-	}
+	
 
 }

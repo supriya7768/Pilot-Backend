@@ -34,10 +34,7 @@ public class LeadFormController {
 	    return leadData;
 	}
 	
-	@DeleteMapping("/delete-lead")
-	public void delete(LeadForm leadForm) {
-		ls.delete(leadForm);
-	}
+	
 
 	
 }
