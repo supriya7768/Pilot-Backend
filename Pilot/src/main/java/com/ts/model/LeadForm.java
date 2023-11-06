@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
@@ -38,10 +39,6 @@ public class LeadForm {
 	private String referenceName;
 	private String batchCode;
 	private String status;
-	private String comment;
-	private String date;
-	
-	
 	public Long getId() {
 		return id;
 	}
@@ -173,18 +170,6 @@ public class LeadForm {
 	}
 	public void setStatus(String status) {
 		this.status = status;
-	}
-	public String getComment() {
-		return comment;
-	}
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
 	}
 	
 	
