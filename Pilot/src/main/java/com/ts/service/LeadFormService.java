@@ -14,7 +14,7 @@ public class LeadFormService {
 
 	@Autowired
 	LeadFormRepository lr;
-	
+
 	public LeadForm addLead(LeadForm leadForm) {
 
 		if (lr.findByEmail(leadForm.getEmail()).isPresent()) {
@@ -28,20 +28,36 @@ public class LeadFormService {
 	}
 
 	public List<LeadForm> getAllLeadData() {
-	    // Modify this method to retrieve all lead data
-	    return lr.findAll(); // Assuming findAll() method exists in your repository
+		// Modify this method to retrieve all lead data
+		return lr.findAll(); // Assuming findAll() method exists in your repository
 	}
 
-	public void delete(String email) {
-		Optional<LeadForm> user = lr.findByEmail(email);
-		
-		if (user.isPresent()) {
-			LeadForm leadForm = user.get();
-			lr.delete(leadForm);
-		}else {
-			
-		}
-		
+	public List<LeadForm> getAllLeadDataDashboard() {
+		// Modify this method to retrieve all lead data
+		return lr.findAll(); // Assuming findAll() method exists in your repository
 	}
 
-}
+	 public List<LeadForm> getActiveLeads() {
+	        return lr.findByStatus("active");
+	    }
+
+	    public List<LeadForm> getStudentLeads() {
+	        return lr.findByStatus("done");
+	    }
+
+	    public LeadForm updateLeadStatus(Long leadId, String newStatus) {
+	        Optional<LeadForm> optionalLead = lr.findById(leadId);
+
+	        if (optionalLead.isPresent()) {
+	            LeadForm lead = optionalLead.get();
+	            lead.setStatus(newStatus);
+	            return lr.save(lead);
+	        } else {
+	            // Handle lead not found
+	            return null;
+	        }
+	    }
+
+	}
+
+

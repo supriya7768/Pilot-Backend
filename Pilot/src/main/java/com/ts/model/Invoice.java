@@ -18,7 +18,6 @@ public class Invoice {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int srNo;
 	private String name;
 	private String email;
