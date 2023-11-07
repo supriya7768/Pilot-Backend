@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,26 +44,22 @@ public class LeadFormController {
 	}
 	
 
-	@GetMapping("/active")
-    public List<LeadForm> getActiveLeads() {
-        return ls.getActiveLeads();
-    }
 
-    @GetMapping("/student")
-    public List<LeadForm> getStudentLeads() {
-        return ls.getStudentLeads();
-    }
-
-    @PutMapping("/{leadId}/status")
-    public ResponseEntity<LeadForm> updateLeadStatus(@PathVariable Long leadId, @RequestParam String newStatus) {
-        LeadForm updatedLead = ls.updateLeadStatus(leadId, newStatus);
-        if (updatedLead != null) {
-            return ResponseEntity.ok(updatedLead);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PostMapping("/updateStatus")
+    public ResponseEntity<String> updateStatus(@RequestParam Long leadId, @RequestParam String newStatus) {
+        ls.updateLeadStatus(leadId, newStatus);
+        if ("done".equals(newStatus)) {
+            ls.moveLeadToStudentPanel(leadId);
         }
+        return ResponseEntity.ok("Status updated");
     }
-
-
+    
+//    @PostMapping("/updateStatus")
+//    public String updateStatus(@RequestParam Long leadId, @RequestParam String newStatus, Model model) {
+//        // Update the status in the backend
+//
+//        // Redirect to the student panel page
+//        return "redirect:/studentpanel.html";
+//    }
 	
 }

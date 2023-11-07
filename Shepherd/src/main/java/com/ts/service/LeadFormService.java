@@ -37,27 +37,18 @@ public class LeadFormService {
 		return lr.findAll(); // Assuming findAll() method exists in your repository
 	}
 
-	 public List<LeadForm> getActiveLeads() {
-	        return lr.findByStatus("active");
-	    }
-
-	    public List<LeadForm> getStudentLeads() {
-	        return lr.findByStatus("done");
-	    }
-
-	    public LeadForm updateLeadStatus(Long leadId, String newStatus) {
-	        Optional<LeadForm> optionalLead = lr.findById(leadId);
-
-	        if (optionalLead.isPresent()) {
-	            LeadForm lead = optionalLead.get();
-	            lead.setStatus(newStatus);
-	            return lr.save(lead);
-	        } else {
-	            // Handle lead not found
-	            return null;
-	        }
-	    }
-
+	public void updateLeadStatus(Long leadId, String newStatus) {
+		Optional<LeadForm> lead = lr.findById(leadId);
+		if (lead.isPresent()) {
+			LeadForm updatedLead = lead.get();
+			updatedLead.setStatus(newStatus);
+			lr.save(updatedLead);
+		}
 	}
 
-
+	public void moveLeadToStudentPanel(Long leadId) {
+		// Implement logic to move the lead to the student panel
+		// This could involve creating a new entity or updating an existing one
+		// You may want to define a StudentPanelRepository and StudentPanel entity
+	}
+}
