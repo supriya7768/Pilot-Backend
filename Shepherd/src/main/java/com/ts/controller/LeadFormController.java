@@ -1,6 +1,8 @@
 package com.ts.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,6 +55,18 @@ public class LeadFormController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update lead status.");
         }
+    }
+	
+	@GetMapping("/get-all-lead-counts")
+    public Map<String, Integer> getAllLeadCounts() {
+        // Fetch all lead data
+        List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
+
+        // Count leads for each date
+        Map<String, Integer> leadCounts = allLeadData.stream()
+                .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+
+        return leadCounts;
     }
 	
 }
