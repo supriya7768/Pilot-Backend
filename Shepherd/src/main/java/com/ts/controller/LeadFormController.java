@@ -32,21 +32,21 @@ public class LeadFormController {
 		return ls.addLead(leadForm);
 
 	}
-	
+
 	@GetMapping("/get-lead-data")
 	@ResponseBody
 	public List<LeadForm> getLeadData() {
-	    List<LeadForm> leadData = ls.getAllLeadData();
-	    return leadData;
+		List<LeadForm> leadData = ls.getAllLeadData();
+		return leadData;
 	}
-	
+
 	@GetMapping("/get-lead-data-dashboard")
 	@ResponseBody
 	public List<LeadForm> getLeadDataDashboard() {
-	    List<LeadForm> leadData = ls.getAllLeadData();
-	    return leadData;
+		List<LeadForm> leadData = ls.getAllLeadData();
+		return leadData;
 	}
-	
+
 	@PutMapping("/update-lead/{id}")
 	public ResponseEntity<Map<String, String>> updateLeadStatus(@PathVariable Long id,
 			@RequestBody Map<String, String> requestBody) {
@@ -55,6 +55,11 @@ public class LeadFormController {
 
 			// Call your service to update the lead status in the database.
 			ls.updateLeadStatus(id, selectedStatus);
+
+			// If status is "Done" or "Close", set the follow date to an empty string
+			if ("Done".equals(selectedStatus) || "Close".equals(selectedStatus)) {
+				ls.updateFollowDate(id, ""); // Update the follow date in your service method
+			}
 
 			// Return a JSON object with the updated status
 			Map<String, String> response = new HashMap<>();
@@ -65,17 +70,17 @@ public class LeadFormController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-	
+
 	@GetMapping("/get-all-lead-counts")
-    public Map<String, Integer> getAllLeadCounts() {
-        // Fetch all lead data
-        List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
+	public Map<String, Integer> getAllLeadCounts() {
+		// Fetch all lead data
+		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
 
-        // Count leads for each date
-        Map<String, Integer> leadCounts = allLeadData.stream()
-                .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+		// Count leads for each date
+		Map<String, Integer> leadCounts = allLeadData.stream()
+				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
 
-        return leadCounts;
-    }
-	
+		return leadCounts;
+	}
+
 }
