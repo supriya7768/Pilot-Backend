@@ -1,5 +1,6 @@
 package com.ts.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,15 +48,23 @@ public class LeadFormController {
 	}
 	
 	@PutMapping("/update-lead/{id}")
-    public ResponseEntity<String> updateLeadStatus(@PathVariable Long id, @RequestBody String selectedStatus) {
-        try {
-            // Call your service to update the lead status in the database.
-            ls.updateLeadStatus(id, selectedStatus);
-            return ResponseEntity.ok(selectedStatus);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update lead status.");
-        }
-    }
+	public ResponseEntity<Map<String, String>> updateLeadStatus(@PathVariable Long id,
+			@RequestBody Map<String, String> requestBody) {
+		try {
+			String selectedStatus = requestBody.get("status");
+
+			// Call your service to update the lead status in the database.
+			ls.updateLeadStatus(id, selectedStatus);
+
+			// Return a JSON object with the updated status
+			Map<String, String> response = new HashMap<>();
+			response.put("status", selectedStatus);
+
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
 	
 	@GetMapping("/get-all-lead-counts")
     public Map<String, Integer> getAllLeadCounts() {
