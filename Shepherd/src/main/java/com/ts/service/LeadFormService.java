@@ -38,16 +38,33 @@ public class LeadFormService {
 	}
 
 	public void updateLeadStatus(Long id, String selectedStatus) {
-	    // Retrieve the lead from the database by leadId.
-	    Optional<LeadForm> optionalLead = lr.findById(id);
+		// Retrieve the lead from the database by leadId.
+		Optional<LeadForm> optionalLead = lr.findById(id);
 
-	    if (optionalLead.isPresent()) {
-	        LeadForm lead = optionalLead.get();
-	        // Update the status of the lead.
-	        lead.setStatus(selectedStatus);
-	        // Save the updated lead back to the database.
-	        lr.save(lead);
-	    }
+		if (optionalLead.isPresent()) {
+			LeadForm lead = optionalLead.get();
+			// Update the status of the lead.
+			lead.setStatus(selectedStatus);
+			// If status is "Done" or "Close", set the follow date to an empty string
+			if ("Done".equals(selectedStatus) || "Close".equals(selectedStatus)) {
+				lead.setFollow(""); // Assuming 'follow' is a field in your LeadForm class
+			}
+			// Save the updated lead back to the database.
+			lr.save(lead);
+		}
+	}
+
+	public void updateFollowDate(Long id, String followDate) {
+		// Retrieve the lead from the database by leadId.
+		Optional<LeadForm> optionalLead = lr.findById(id);
+
+		if (optionalLead.isPresent()) {
+			LeadForm lead = optionalLead.get();
+			// Update the follow date of the lead.
+			lead.setFollow(followDate);
+			// Save the updated lead back to the database.
+			lr.save(lead);
+		}
 	}
 
 }
