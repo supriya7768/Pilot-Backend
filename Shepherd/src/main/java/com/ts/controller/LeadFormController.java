@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +31,8 @@ public class LeadFormController {
 	LeadFormService ls;
 
 	@PostMapping("/add-lead")
-	public LeadForm addLead(@RequestBody LeadForm leadForm) {
+	public String addLead(@RequestBody LeadForm leadForm) {
 		return ls.addLead(leadForm);
-
 	}
 
 	@GetMapping("/get-lead-data")
@@ -83,4 +85,16 @@ public class LeadFormController {
 		return leadCounts;
 	}
 
+	@PostMapping("/save-edits/{id}")
+	public ResponseEntity<String> saveEdits(@PathVariable Long id, @RequestParam String newFollowUpDate,
+			@RequestParam String newComment) {
+		try {
+			ls.saveEdits(id, newFollowUpDate, newComment);
+			return ResponseEntity.ok("Edit is saved successfully");
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lead not found");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving edits");
+		}
+	}
 }
