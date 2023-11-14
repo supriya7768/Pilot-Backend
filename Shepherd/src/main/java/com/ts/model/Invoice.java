@@ -18,7 +18,7 @@ public class Invoice {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private int srNo;
+	private int invoiceId;
 	private String name;
 	private String email;
 	private String mobile;
