@@ -16,21 +16,19 @@ import com.ts.service.InvoiceService;
 @CrossOrigin("*")
 @RestController
 public class InvoiceController {
-	
+
 	@Autowired
 	InvoiceService is;
 
 	@PostMapping("/add-invoice")
 	public Invoice addInvoice(@RequestBody Invoice invoice) {
 		return is.addInvoice(invoice);
-
 	}
-	
 
 	@GetMapping("/get-invoice-data")
 	@ResponseBody
 	public List<Invoice> getInvoiceData() {
-	    List<Invoice> invoice = is.getAllInvoiceData();
-	    return invoice;
+		List<Invoice> invoice = is.getAllInvoiceData();
+		return invoice;
 	}
 }
