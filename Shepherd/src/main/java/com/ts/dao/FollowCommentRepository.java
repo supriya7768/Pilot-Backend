@@ -8,4 +8,5 @@ import com.ts.model.FollowComment;
 @Repository
 public interface FollowCommentRepository extends JpaRepository<FollowComment, Long> {
     // Add custom query methods if needed
+	
 }

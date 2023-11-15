@@ -108,11 +108,18 @@ public class LeadFormService {
 		fc.setLatestComment(newComment);
 		fc.setLatestFollow(newFollowUpDate);
 
+		// Save the FollowComment first
+		followCommentRepository.save(fc);
+
 		if (leadForm.getFollowComments() == null) {
 			leadForm.setFollowComments(new ArrayList<>());
 		}
 
 		leadForm.getFollowComments().add(fc);
+
+		// Update LeadForm with the new comment and follow-up
+		leadForm.setComment(newComment);
+		leadForm.setFollow(newFollowUpDate);
 
 		// Save the lead form with the new comment and follow-up
 		lr.save(leadForm);
