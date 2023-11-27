@@ -49,6 +49,7 @@ public class LeadFormService {
 				FollowComment followComment = new FollowComment();
 				followComment.setLatestFollow(savedLeadForm.getFollow());
 				followComment.setLatestComment(savedLeadForm.getComment());
+				followComment.setLatestStatus(savedLeadForm.getStatus());
 				followComment.setLeadForm(savedLeadForm);
 
 				// Save the FollowComment
@@ -99,7 +100,7 @@ public class LeadFormService {
 	}
 
 	@Transactional
-	public void saveEdits(Long id, String newFollowUpDate, String newComment) {
+	public void saveEdits(Long id, String newFollowUpDate, String newComment, String changeStatus) {
 		LeadForm leadForm = lr.findById(id).orElseThrow(EntityNotFoundException::new);
 
 		// Save the new comment and follow-up in FollowComment
@@ -107,6 +108,7 @@ public class LeadFormService {
 		fc.setLeadForm(leadForm);
 		fc.setLatestComment(newComment);
 		fc.setLatestFollow(newFollowUpDate);
+		fc.setLatestStatus(changeStatus);
 
 		// Save the FollowComment first
 		followCommentRepository.save(fc);
@@ -120,6 +122,7 @@ public class LeadFormService {
 		// Update LeadForm with the new comment and follow-up
 		leadForm.setComment(newComment);
 		leadForm.setFollow(newFollowUpDate);
+		leadForm.setStatus(changeStatus);
 
 		// Save the lead form with the new comment and follow-up
 		lr.save(leadForm);

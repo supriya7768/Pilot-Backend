@@ -87,9 +87,9 @@ public class LeadFormController {
 
 	@PostMapping("/save-edits/{id}")
 	public ResponseEntity<String> saveEdits(@PathVariable Long id, @RequestParam String newFollowUpDate,
-			@RequestParam String newComment) {
+			@RequestParam String newComment, @RequestParam String changeStatus) {
 		try {
-			ls.saveEdits(id, newFollowUpDate, newComment);
+			ls.saveEdits(id, newFollowUpDate, newComment, changeStatus);
 			return ResponseEntity.ok("Edit is saved successfully");
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lead not found");
