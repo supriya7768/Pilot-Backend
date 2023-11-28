@@ -50,6 +50,7 @@ public class LeadForm {
 
 	private String latestComment;
 	private String latestFollow;
+	private String latestStatus;
 
 	@OneToMany(mappedBy = "leadForm", cascade = CascadeType.ALL)
 	@JsonIgnore

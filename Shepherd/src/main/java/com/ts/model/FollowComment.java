@@ -22,6 +22,7 @@ public class FollowComment {
 
 	private String latestComment;
 	private String latestFollow;
+	private String latestStatus;
 
 	@ManyToOne
 	private LeadForm leadForm;
