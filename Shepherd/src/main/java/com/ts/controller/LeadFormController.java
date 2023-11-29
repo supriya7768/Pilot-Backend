@@ -78,11 +78,16 @@ public class LeadFormController {
 		// Fetch all lead data
 		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
 
-		// Count leads for each date
-		Map<String, Integer> leadCounts = allLeadData.stream()
-				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+		// Filter out leads with status "Done" or "Closed"
+		List<LeadForm> filteredLeads = allLeadData.stream()
+				.filter(lead -> !"Done".equals(lead.getStatus()) && !"Closed".equals(lead.getStatus()))
+				.collect(Collectors.toList());
 
-		return leadCounts;
+		// Count leads for each date
+	    Map<String, Integer> leadCounts = filteredLeads.stream()
+	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+
+	    return leadCounts;
 	}
 
 	@PostMapping("/save-edits/{id}")
