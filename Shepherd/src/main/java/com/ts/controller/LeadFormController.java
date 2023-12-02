@@ -58,8 +58,8 @@ public class LeadFormController {
 			// Call your service to update the lead status in the database.
 			ls.updateLeadStatus(id, selectedStatus);
 
-			// If status is "Done" or "Close", set the follow date to an empty string
-			if ("Done".equals(selectedStatus) || "Close".equals(selectedStatus)) {
+			// If status is "Deal Done" or "Close", set the follow date to an empty string
+			if ("Deal Done".equals(selectedStatus) || "Close".equals(selectedStatus)) {
 				ls.updateFollowDate(id, ""); // Update the follow date in your service method
 			}
 
@@ -78,17 +78,61 @@ public class LeadFormController {
 		// Fetch all lead data
 		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
 
-		// Filter out leads with status "Done" or "Closed"
+		// Filter out leads with status "Deal Done" or "Close"
 		List<LeadForm> filteredLeads = allLeadData.stream()
-				.filter(lead -> !"Done".equals(lead.getStatus()) && !"Closed".equals(lead.getStatus()))
+				.filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
 				.collect(Collectors.toList());
 
 		// Count leads for each date
-	    Map<String, Integer> leadCounts = filteredLeads.stream()
-	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+		Map<String, Integer> leadCounts = filteredLeads.stream()
+				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
 
-	    return leadCounts;
+		return leadCounts;
 	}
+
+	@GetMapping("/get-total-lead-counts")
+	public Long getTotalLeadCounts() {
+		Long l = ls.getTotalId();
+		return l;
+	}
+
+	@GetMapping("/get-total-lead-counts-done")
+	public Long getTotalLeadCountsDone() {
+		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
+
+		// Filter leads with status "Deal Done" and count them
+		long count = leads.stream().filter(lead -> "Deal Done".equals(lead.getStatus())).count();
+
+		return count;
+	}
+
+	@GetMapping("/get-total-lead-counts-close")
+	public Long getTotalLeadCountsClose() {
+		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
+
+		// Filter leads with status "Close" and count them
+		long count = leads.stream().filter(lead -> "Close".equals(lead.getStatus())).count();
+
+		return count;
+	}
+	
+//	@GetMapping("/get-total-lead-counts")
+//	public Long getTotalLeadCounts(@RequestParam String monthYear) {
+//	    List<LeadForm> leads = ls.getAllLeadDataForMonth(monthYear, null); // Pass null or an empty string for status to include all leads
+//	    return (long) leads.size();
+//	}
+//	
+//	@GetMapping("/get-total-lead-counts-done")
+//	public Long getTotalLeadCountsDone(@RequestParam String monthYear) {
+//	    List<LeadForm> leads = ls.getAllLeadDataForMonth(monthYear, "Deal Done");
+//	    return (long) leads.size();
+//	}
+//
+//	@GetMapping("/get-total-lead-counts-close")
+//	public Long getTotalLeadCountsClose(@RequestParam String monthYear) {
+//	    List<LeadForm> leads = ls.getAllLeadDataForMonth(monthYear, "Close");
+//	    return (long) leads.size();
+//	}
 
 	@PostMapping("/save-edits/{id}")
 	public ResponseEntity<String> saveEdits(@PathVariable Long id, @RequestParam String newFollowUpDate,

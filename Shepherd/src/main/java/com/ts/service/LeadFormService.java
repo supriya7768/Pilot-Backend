@@ -24,18 +24,6 @@ public class LeadFormService {
 	@Autowired
 	FollowCommentRepository followCommentRepository;
 
-//	public LeadForm addLead(LeadForm leadForm) {
-//
-//		if (lr.findByEmail(leadForm.getEmail()).isPresent()) {
-//			return new LeadForm();
-//		}
-//		if (lr.findByMobile(leadForm.getMobile()).isPresent()) {
-//			return new LeadForm();
-//		} else {
-//			return lr.save(leadForm);
-//		}
-//	}
-
 	public String addLead(LeadForm leadForm) {
 		// Check if the email or mobile already exists
 		if (lr.findByEmail(leadForm.getEmail()).isPresent() || lr.findByMobile(leadForm.getMobile()).isPresent()) {
@@ -44,8 +32,9 @@ public class LeadFormService {
 			// Save the LeadForm to get the generated ID
 			LeadForm savedLeadForm = lr.save(leadForm);
 
-			// Check if the status is "Pending" or "Active"
-			if ("Pending".equals(savedLeadForm.getStatus()) || "Active".equals(savedLeadForm.getStatus())) {
+			// Check if the status is "Contacted" or "Open" or "Proposal Sent"
+			if ("Contacted".equals(savedLeadForm.getStatus()) || "Open".equals(savedLeadForm.getStatus())
+					|| "Proposal Sent".equals(savedLeadForm.getStatus())) {
 				FollowComment followComment = new FollowComment();
 				followComment.setLatestFollow(savedLeadForm.getFollow());
 				followComment.setLatestComment(savedLeadForm.getComment());
@@ -82,7 +71,7 @@ public class LeadFormService {
 		if (optionalLead.isPresent()) {
 			LeadForm lead = optionalLead.get();
 			lead.setStatus(selectedStatus);
-			if ("Done".equals(selectedStatus) || "Close".equals(selectedStatus)) {
+			if ("Deal Done".equals(selectedStatus) || "Close".equals(selectedStatus)) {
 				lead.setFollow(""); // Assuming 'follow' is a field in your LeadForm class
 			}
 			lr.save(lead);
@@ -127,5 +116,25 @@ public class LeadFormService {
 		// Save the lead form with the new comment and follow-up
 		lr.save(leadForm);
 	}
+	
+	public Long getTotalId(){
+		return lr.count();
+	}
+	
+//	public List<LeadForm> getAllLeadDataForMonth(String monthYear, String status) {
+//        int month = Integer.parseInt(monthYear.split("-")[1]);
+//        int year = Integer.parseInt(monthYear.split("-")[0]);
+//
+//        LocalDate startDate = LocalDate.of(year, month, 1);
+//        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+//
+//        if (status != null) {
+//            return lr.findByCreatedAtBetweenAndStatus(startDate, endDate, status);
+//        } else {
+//            return lr.findByCreatedAtBetween(startDate, endDate);
+//        }
+//    }
+
+
 
 }

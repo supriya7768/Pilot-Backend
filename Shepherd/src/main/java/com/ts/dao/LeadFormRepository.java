@@ -11,10 +11,13 @@ import com.ts.model.LeadForm;
 @Repository
 public interface LeadFormRepository extends JpaRepository<LeadForm, Long> {
 
-	Optional<LeadForm> findByEmail(String email);
+    Optional<LeadForm> findByEmail(String email);
 
-	Optional<LeadForm> findByMobile(String mobile);
+    Optional<LeadForm> findByMobile(String mobile);
 
-	List<LeadForm> findByStatus(String status);
+    List<LeadForm> findByStatus(String status);
 
+//    List<LeadForm> findByCreatedAtBetweenAndStatus(LocalDate startDate, LocalDate endDate, String status);
+//
+//    List<LeadForm> findByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
 }

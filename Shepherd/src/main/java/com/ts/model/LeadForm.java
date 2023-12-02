@@ -48,6 +48,8 @@ public class LeadForm {
 	private String follow;
 	private String date;
 
+//	private LocalDate createdAt;  // Rename 'date' to 'createdAt'
+	
 	private String latestComment;
 	private String latestFollow;
 	private String latestStatus;
