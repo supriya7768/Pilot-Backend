@@ -118,87 +118,87 @@ public class LeadFormController {
 //		return count;
 //	}
 	
-	
-	@GetMapping("/get-all-lead-counts")
-	public Map<String, Integer> getAllLeadCountsByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
-
-	    // Fetch all lead data
-	    List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
-
-	    // Filter out leads with status "Deal Done" or "Close" for the current month
-	    List<LeadForm> filteredLeads = allLeadData.stream()
-	            .filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
-	            .filter(lead -> {
-	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .collect(Collectors.toList());
-
-	    // Count leads for each date
-	    Map<String, Integer> leadCounts = filteredLeads.stream()
-	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
-
-	    return leadCounts;
-	}
-
-	@GetMapping("/get-total-lead-counts")
-	public Long getTotalLeadCountsByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
-
-	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
-
-	    // Filter leads by current month and count them
-	    long count = leads.stream()
-	            .filter(lead -> {
-	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .count();
-
-	    return count;
-	}
-
-	@GetMapping("/get-total-lead-counts-done")
-	public Long getTotalLeadCountsDoneByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
-
-	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
-
-	    // Filter leads with status "Deal Done" by current month and count them
-	    long count = leads.stream()
-	            .filter(lead -> "Deal Done".equals(lead.getStatus()))
-	            .filter(lead -> {
-	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .count();
-
-	    return count;
-	}
-
-	@GetMapping("/get-total-lead-counts-close")
-	public Long getTotalLeadCountsCloseByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
-
-	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
-
-	    // Filter leads with status "Close" by current month and count them
-	    long count = leads.stream()
-	            .filter(lead -> "Close".equals(lead.getStatus()))
-	            .filter(lead -> {
-	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .count();
-
-	    return count;
-	}
-
+//=============supriya code below==========	
+//	@GetMapping("/get-all-lead-counts")
+//	public Map<String, Integer> getAllLeadCountsByMonth() {
+//	    // Get the current month
+//	    YearMonth currentMonth = YearMonth.now();
+//
+//	    // Fetch all lead data
+//	    List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
+//
+//	    // Filter out leads with status "Deal Done" or "Close" for the current month
+//	    List<LeadForm> filteredLeads = allLeadData.stream()
+//	            .filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
+//	            .filter(lead -> {
+//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
+//	                return leadDate.getMonth() == currentMonth.getMonth();
+//	            })
+//	            .collect(Collectors.toList());
+//
+//	    // Count leads for each date
+//	    Map<String, Integer> leadCounts = filteredLeads.stream()
+//	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+//
+//	    return leadCounts;
+//	}
+//
+//	@GetMapping("/get-total-lead-counts")
+//	public Long getTotalLeadCountsByMonth() {
+//	    // Get the current month
+//	    YearMonth currentMonth = YearMonth.now();
+//
+//	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+//
+//	    // Filter leads by current month and count them
+//	    long count = leads.stream()
+//	            .filter(lead -> {
+//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
+//	                return leadDate.getMonth() == currentMonth.getMonth();
+//	            })
+//	            .count();
+//
+//	    return count;
+//	}
+//
+//	@GetMapping("/get-total-lead-counts-done")
+//	public Long getTotalLeadCountsDoneByMonth() {
+//	    // Get the current month
+//	    YearMonth currentMonth = YearMonth.now();
+//
+//	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+//
+//	    // Filter leads with status "Deal Done" by current month and count them
+//	    long count = leads.stream()
+//	            .filter(lead -> "Deal Done".equals(lead.getStatus()))
+//	            .filter(lead -> {
+//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
+//	                return leadDate.getMonth() == currentMonth.getMonth();
+//	            })
+//	            .count();
+//
+//	    return count;
+//	}
+//
+//	@GetMapping("/get-total-lead-counts-close")
+//	public Long getTotalLeadCountsCloseByMonth() {
+//	    // Get the current month
+//	    YearMonth currentMonth = YearMonth.now();
+//
+//	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+//
+//	    // Filter leads with status "Close" by current month and count them
+//	    long count = leads.stream()
+//	            .filter(lead -> "Close".equals(lead.getStatus()))
+//	            .filter(lead -> {
+//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
+//	                return leadDate.getMonth() == currentMonth.getMonth();
+//	            })
+//	            .count();
+//
+//	    return count;
+//	}
+//
 
 	
 	
