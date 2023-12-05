@@ -49,7 +49,7 @@ public class LeadForm {
 	private String date;
 
 //	private LocalDate createdAt;  // Rename 'date' to 'createdAt'
-	
+
 	private String latestComment;
 	private String latestFollow;
 	private String latestStatus;
@@ -57,5 +57,9 @@ public class LeadForm {
 	@OneToMany(mappedBy = "leadForm", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<FollowComment> followComments;
+
+	@OneToMany(mappedBy = "leadForm", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Invoice> invoices;
 
 }
