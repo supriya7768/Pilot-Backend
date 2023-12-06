@@ -17,6 +17,8 @@ public interface LeadFormRepository extends JpaRepository<LeadForm, Long> {
 
     List<LeadForm> findByStatus(String status);
 
+	LeadForm findByEmailOrMobile(String email, String mobile);
+
 //    List<LeadForm> findByCreatedAtBetweenAndStatus(LocalDate startDate, LocalDate endDate, String status);
 //
 //    List<LeadForm> findByCreatedAtBetween(LocalDate startDate, LocalDate endDate);

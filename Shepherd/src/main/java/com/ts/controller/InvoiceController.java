@@ -21,7 +21,7 @@ public class InvoiceController {
 	InvoiceService is;
 
 	@PostMapping("/add-invoice")
-	public Invoice addInvoice(@RequestBody Invoice invoice) {
+	public String addInvoice(@RequestBody Invoice invoice) {
 		return is.addInvoice(invoice);
 	}
 
@@ -31,4 +31,9 @@ public class InvoiceController {
 		List<Invoice> invoice = is.getAllInvoiceData();
 		return invoice;
 	}
+	
+	@GetMapping("/last-invoice-id")
+    public int getLastInvoiceId() {
+        return is.getLastInvoiceId();
+    }
 }
