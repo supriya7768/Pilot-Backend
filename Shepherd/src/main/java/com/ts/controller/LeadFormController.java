@@ -1,5 +1,8 @@
 package com.ts.controller;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,131 +75,182 @@ public class LeadFormController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-
-	@GetMapping("/get-all-lead-counts")
-	public Map<String, Integer> getAllLeadCounts() {
-		// Fetch all lead data
-		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
-
-		// Filter out leads with status "Deal Done" or "Close"
-		List<LeadForm> filteredLeads = allLeadData.stream()
-				.filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
-				.collect(Collectors.toList());
-
-		// Count leads for each date
-		Map<String, Integer> leadCounts = filteredLeads.stream()
-				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
-
-		return leadCounts;
-	}
-
-	@GetMapping("/get-total-lead-counts")
-	public Long getTotalLeadCounts() {
-		Long l = ls.getTotalId();
-		return l;
-	}
-
-	@GetMapping("/get-total-lead-counts-done")
-	public Long getTotalLeadCountsDone() {
-		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
-
-		// Filter leads with status "Deal Done" and count them
-		long count = leads.stream().filter(lead -> "Deal Done".equals(lead.getStatus())).count();
-
-		return count;
-	}
-
-	@GetMapping("/get-total-lead-counts-close")
-	public Long getTotalLeadCountsClose() {
-		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
-
-		// Filter leads with status "Close" and count them
-		long count = leads.stream().filter(lead -> "Close".equals(lead.getStatus())).count();
-
-		return count;
-	}
 	
-//=============supriya code below==========	
+	//=================kiran code below===============
+
 //	@GetMapping("/get-all-lead-counts")
-//	public Map<String, Integer> getAllLeadCountsByMonth() {
-//	    // Get the current month
-//	    YearMonth currentMonth = YearMonth.now();
+//	public Map<String, Integer> getAllLeadCounts() {
+//		// Fetch all lead data
+//		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
 //
-//	    // Fetch all lead data
-//	    List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
+//		// Filter out leads with status "Deal Done" or "Close"
+//		List<LeadForm> filteredLeads = allLeadData.stream()
+//				.filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
+//				.collect(Collectors.toList());
 //
-//	    // Filter out leads with status "Deal Done" or "Close" for the current month
-//	    List<LeadForm> filteredLeads = allLeadData.stream()
-//	            .filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
-//	            .filter(lead -> {
-//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-//	                return leadDate.getMonth() == currentMonth.getMonth();
-//	            })
-//	            .collect(Collectors.toList());
+//		// Count leads for each date
+//		Map<String, Integer> leadCounts = filteredLeads.stream()
+//				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
 //
-//	    // Count leads for each date
-//	    Map<String, Integer> leadCounts = filteredLeads.stream()
-//	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
-//
-//	    return leadCounts;
+//		return leadCounts;
 //	}
 //
 //	@GetMapping("/get-total-lead-counts")
-//	public Long getTotalLeadCountsByMonth() {
-//	    // Get the current month
-//	    YearMonth currentMonth = YearMonth.now();
-//
-//	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
-//
-//	    // Filter leads by current month and count them
-//	    long count = leads.stream()
-//	            .filter(lead -> {
-//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-//	                return leadDate.getMonth() == currentMonth.getMonth();
-//	            })
-//	            .count();
-//
-//	    return count;
+//	public Long getTotalLeadCounts() {
+//		Long l = ls.getTotalId();
+//		return l;
 //	}
 //
 //	@GetMapping("/get-total-lead-counts-done")
-//	public Long getTotalLeadCountsDoneByMonth() {
-//	    // Get the current month
-//	    YearMonth currentMonth = YearMonth.now();
+//	public Long getTotalLeadCountsDone() {
+//		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
 //
-//	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+//		// Filter leads with status "Deal Done" and count them
+//		long count = leads.stream().filter(lead -> "Deal Done".equals(lead.getStatus())).count();
 //
-//	    // Filter leads with status "Deal Done" by current month and count them
-//	    long count = leads.stream()
-//	            .filter(lead -> "Deal Done".equals(lead.getStatus()))
-//	            .filter(lead -> {
-//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-//	                return leadDate.getMonth() == currentMonth.getMonth();
-//	            })
-//	            .count();
-//
-//	    return count;
+//		return count;
 //	}
 //
 //	@GetMapping("/get-total-lead-counts-close")
-//	public Long getTotalLeadCountsCloseByMonth() {
-//	    // Get the current month
-//	    YearMonth currentMonth = YearMonth.now();
+//	public Long getTotalLeadCountsClose() {
+//		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
 //
-//	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+//		// Filter leads with status "Close" and count them
+//		long count = leads.stream().filter(lead -> "Close".equals(lead.getStatus())).count();
 //
-//	    // Filter leads with status "Close" by current month and count them
-//	    long count = leads.stream()
-//	            .filter(lead -> "Close".equals(lead.getStatus()))
-//	            .filter(lead -> {
-//	                LocalDate leadDate = LocalDate.parse(lead.getFollow()); // Assuming "yyyy-MM-dd" format
-//	                return leadDate.getMonth() == currentMonth.getMonth();
-//	            })
-//	            .count();
-//
-//	    return count;
+//		return count;
 //	}
-//
+//	
+//=============supriya code below==========	
+	@GetMapping("/get-all-lead-counts")
+	public Map<String, Integer> getAllLeadCountsByMonth() {
+	    // Get the current month
+	    YearMonth currentMonth = YearMonth.now();
+
+	    // Fetch all lead data
+	    List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
+
+	    // Filter out leads with status "Deal Done" or "Close" for the current month
+	    List<LeadForm> filteredLeads = allLeadData.stream()
+	            .filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
+	            .filter(lead -> {
+	                String followDateStr = lead.getFollow();
+	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
+	                    return false; // Skip leads with empty or whitespace date strings
+	                }
+
+	                LocalDate leadDate;
+	                try {
+	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+	                } catch (DateTimeParseException e) {
+	                    return false; // Skip leads with invalid date strings
+	                }
+
+	                return leadDate.getMonth() == currentMonth.getMonth();
+	            })
+	            .collect(Collectors.toList());
+
+	    // Count leads for each date
+	    Map<String, Integer> leadCounts = filteredLeads.stream()
+	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+
+	    return leadCounts;
+	}
+
+	// The other two methods (getTotalLeadCountsByMonth and getTotalLeadCountsDoneByMonth) can use similar modifications.
+
+
+	@GetMapping("/get-total-lead-counts")
+	public Long getTotalLeadCountsByMonth() {
+	    // Get the current month
+	    YearMonth currentMonth = YearMonth.now();
+
+	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+
+	    // Filter leads by current month and count them
+	    long count = leads.stream()
+	            .filter(lead -> {
+	                String followDateStr = lead.getFollow();
+	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
+	                    return false; // Skip leads with empty or whitespace date strings
+	                }
+
+	                LocalDate leadDate;
+	                try {
+	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+	                } catch (DateTimeParseException e) {
+	                    return false; // Skip leads with invalid date strings
+	                }
+
+	                return leadDate.getMonth() == currentMonth.getMonth();
+	            })
+	            .count();
+
+	    return count;
+	}
+
+	@GetMapping("/get-total-lead-counts-done")
+	public Long getTotalLeadCountsDoneByMonth() {
+	    // Get the current month
+	    YearMonth currentMonth = YearMonth.now();
+
+	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+
+	    // Filter leads with status "Deal Done" by current month and count them
+	    long count = leads.stream()
+	            .filter(lead -> "Deal Done".equals(lead.getStatus()))
+	            .filter(lead -> {
+	                String followDateStr = lead.getFollow();
+	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
+	                    return false; // Skip leads with empty or whitespace date strings
+	                }
+
+	                LocalDate leadDate;
+	                try {
+	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+	                } catch (DateTimeParseException e) {
+	                    return false; // Skip leads with invalid date strings
+	                }
+
+	                return leadDate.getMonth() == currentMonth.getMonth();
+	            })
+	            .count();
+
+	    return count;
+	}
+
+
+	@GetMapping("/get-total-lead-counts-close")
+	public Long getTotalLeadCountsCloseByMonth() {
+	    // Get the current month
+	    YearMonth currentMonth = YearMonth.now();
+
+	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+
+	    // Filter leads with status "Close" by current month and count them
+	    long count = leads.stream()
+	            .filter(lead -> "Close".equals(lead.getStatus()))
+	            .filter(lead -> {
+	                String followDateStr = lead.getFollow();
+	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
+	                    return false; // Skip leads with empty or whitespace date strings
+	                }
+
+	                LocalDate leadDate;
+	                try {
+	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+	                } catch (DateTimeParseException e) {
+	                    return false; // Skip leads with invalid date strings
+	                }
+
+	                return leadDate.getMonth() == currentMonth.getMonth();
+	            })
+	            .count();
+
+	    return count;
+	}
+
+
 	
 	//===============================================================================================
 	
