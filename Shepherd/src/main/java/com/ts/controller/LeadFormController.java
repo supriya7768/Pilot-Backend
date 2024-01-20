@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ts.model.LeadForm;
 import com.ts.service.LeadFormService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @CrossOrigin("*")
 @RestController
@@ -75,53 +75,7 @@ public class LeadFormController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-	
-	//=================kiran code below===============
-
-//	@GetMapping("/get-all-lead-counts")
-//	public Map<String, Integer> getAllLeadCounts() {
-//		// Fetch all lead data
-//		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
-//
-//		// Filter out leads with status "Deal Done" or "Close"
-//		List<LeadForm> filteredLeads = allLeadData.stream()
-//				.filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
-//				.collect(Collectors.toList());
-//
-//		// Count leads for each date
-//		Map<String, Integer> leadCounts = filteredLeads.stream()
-//				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
-//
-//		return leadCounts;
-//	}
-//
-//	@GetMapping("/get-total-lead-counts")
-//	public Long getTotalLeadCounts() {
-//		Long l = ls.getTotalId();
-//		return l;
-//	}
-//
-//	@GetMapping("/get-total-lead-counts-done")
-//	public Long getTotalLeadCountsDone() {
-//		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
-//
-//		// Filter leads with status "Deal Done" and count them
-//		long count = leads.stream().filter(lead -> "Deal Done".equals(lead.getStatus())).count();
-//
-//		return count;
-//	}
-//
-//	@GetMapping("/get-total-lead-counts-close")
-//	public Long getTotalLeadCountsClose() {
-//		List<LeadForm> leads = ls.getAllLeadData(); // You need a method to get all leads, modify accordingly
-//
-//		// Filter leads with status "Close" and count them
-//		long count = leads.stream().filter(lead -> "Close".equals(lead.getStatus())).count();
-//
-//		return count;
-//	}
-//	
-//=============supriya code below==========	
+		
 	@GetMapping("/get-all-lead-counts")
 	public Map<String, Integer> getAllLeadCountsByMonth() {
 	    // Get the current month

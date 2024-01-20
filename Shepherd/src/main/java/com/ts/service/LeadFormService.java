@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +12,8 @@ import com.ts.dao.FollowCommentRepository;
 import com.ts.dao.LeadFormRepository;
 import com.ts.model.FollowComment;
 import com.ts.model.LeadForm;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class LeadFormService {

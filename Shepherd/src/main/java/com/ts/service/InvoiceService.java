@@ -2,8 +2,6 @@ package com.ts.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +9,8 @@ import com.ts.dao.InvoiceRepository;
 import com.ts.dao.LeadFormRepository;
 import com.ts.model.Invoice;
 import com.ts.model.LeadForm;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class InvoiceService {

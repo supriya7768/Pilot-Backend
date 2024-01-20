@@ -1,10 +1,10 @@
-package com.ts.Pilot;
+package com.ts;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PilotApplicationTests {
+class ShepherdApplicationTests {
 
 	@Test
 	void contextLoads() {
