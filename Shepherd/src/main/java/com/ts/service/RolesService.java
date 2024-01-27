@@ -31,6 +31,7 @@ public class RolesService {
 			if (rr.findByRoleType(role.getRoleType()).isPresent()) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Role already exists");
 			} else {
+				role.setRoleType(role.getRoleType().toUpperCase());
 				rr.save(role);
 				return ResponseEntity.ok("Adding Role: " + role.getRoleType());
 			}
