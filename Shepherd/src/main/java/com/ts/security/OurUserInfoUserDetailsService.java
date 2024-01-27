@@ -13,13 +13,20 @@ import com.ts.model.OurUsers;
 
 @Configuration
 public class OurUserInfoUserDetailsService implements UserDetailsService {
-	@Autowired
-	private OurUsersRepository ourUserRepository;
+    @Autowired
+    private OurUsersRepository ourUserRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<OurUsers> user = ourUserRepository.findByEmail(username);
-		return user.map(OurUserInfoDetails::new)
-				.orElseThrow(() -> new UsernameNotFoundException("User Does Not Exist"));
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<OurUsers> user = ourUserRepository.findByEmail(username);
+        OurUserInfoDetails userDetails = user.map(OurUserInfoDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User Does Not Exist"));
+
+        // Check if the user has SUPERADMIN role
+        if (!userDetails.hasSuperAdminRole()) {
+            throw new UsernameNotFoundException("User Does Not Have SUPERADMIN Role");
+        }
+
+        return userDetails;
+    }
 }

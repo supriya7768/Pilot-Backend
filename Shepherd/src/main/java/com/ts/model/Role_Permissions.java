@@ -25,5 +25,4 @@ public class Role_Permissions {
 	@ManyToOne
 	private Permissions permission;
 
-	
 }
