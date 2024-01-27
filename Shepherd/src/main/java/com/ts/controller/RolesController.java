@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ts.model.Roles;
 import com.ts.service.RolesService;
 
+import ch.qos.logback.core.model.Model;
+
 @CrossOrigin("*")
 @RestController
 public class RolesController {
@@ -23,6 +25,7 @@ public class RolesController {
 	@Autowired
 	RolesService rs;
 
+	@PreAuthorize("hasRole('SUPERADMIN')")
 	@PostMapping("/addRole")
 	public ResponseEntity<String> addRole(@RequestBody Roles role) {
 		return rs.addRole(role);
