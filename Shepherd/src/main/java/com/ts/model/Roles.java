@@ -1,11 +1,9 @@
 package com.ts.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,38 +19,6 @@ public class Roles {
 	private Long rollId;
 	private String roleType;
 
-	@OneToOne(mappedBy = "role", cascade = CascadeType.ALL)
-	private Users user;
-
-	public Long getRollId() {
-		return rollId;
-	}
-
-	public void setRollId(Long rollId) {
-		this.rollId = rollId;
-	}
-
-	public String getRoleType() {
-		return roleType;
-	}
-
-	public void setRoleType(String roleType) {
-		this.roleType = roleType;
-	}
-
-	public Users getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
-
-	public Roles(Long rollId, String roleType, Users user) {
-		super();
-		this.rollId = rollId;
-		this.roleType = roleType;
-		this.user = user;
-	}
-
+//	@OneToOne(mappedBy = "role", cascade = CascadeType.ALL)
+//	private OurUsers user;
 }

@@ -25,7 +25,7 @@ public class Role_PermissionsController {
 //    @PostMapping("/linkRoleToPermissions")
 //    @ResponseBody
 //    public ResponseEntity<String> linkRoleToPermissions(@RequestBody Roles role) {
-//        // Assuming you have a method to get the permissions for the specified role from the database
+//        // Assuming you have as method to get the permissions for the specified role from the database
 //        List<Roles> role = permissionsService.getPermissionsByRole(role);
 //
 //        // Link permissions to the role
