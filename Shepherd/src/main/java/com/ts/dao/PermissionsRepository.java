@@ -10,4 +10,5 @@ import com.ts.model.Permissions;
 @Repository
 public interface PermissionsRepository extends JpaRepository<Permissions, Long> {
 	Optional<Permissions> findByPermissionType(String permissionType);
+
 }

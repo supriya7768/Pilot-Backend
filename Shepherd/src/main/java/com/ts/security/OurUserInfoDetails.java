@@ -23,6 +23,7 @@ public class OurUserInfoDetails implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
@@ -56,5 +57,9 @@ public class OurUserInfoDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    
+    public boolean hasSuperAdminRole() {
+        return this.roles.stream().anyMatch(role -> role.getAuthority().equals("SUPERADMIN"));
     }
 }

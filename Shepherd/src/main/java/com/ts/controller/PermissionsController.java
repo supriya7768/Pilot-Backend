@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,14 +18,13 @@ import com.ts.service.PermissionsService;
 @CrossOrigin("*")
 @RestController
 public class PermissionsController {
-	
+
 	@Autowired
 	PermissionsService ps;
-	
+
 	@PostMapping("/addPermission")
-	@ResponseBody
-	public ResponseEntity<String> addPermission(@RequestBody Permissions permission) {
-		return ps.addPermission(permission);
+	public ResponseEntity<String> addPermission(@RequestBody Permissions permission, Authentication authentication) {
+		return ps.addPermission(permission, authentication);
 	}
 
 	@GetMapping("/getAllPermissions")
@@ -33,4 +33,5 @@ public class PermissionsController {
 		List<Permissions> allPermissions = ps.getAllPermissions();
 		return allPermissions;
 	}
+
 }
