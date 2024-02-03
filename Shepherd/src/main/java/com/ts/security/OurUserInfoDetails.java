@@ -1,65 +1,64 @@
 package com.ts.security;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ts.model.OurUsers;
 
-public class OurUserInfoDetails implements UserDetails {
-    private String email;
-    private String password;
-    private List<GrantedAuthority> roles;
+import lombok.Getter;
 
-    public OurUserInfoDetails(OurUsers ourUsers){
-        this.email = ourUsers.getEmail();
-        this.password = ourUsers.getPassword();
-        this.roles = Arrays.stream(ourUsers.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+@Getter
+public class OurUserInfoDetails implements UserDetails {
+
+    private final OurUsers user;
+
+    public OurUserInfoDetails(OurUsers user) {
+        this.user = user;
     }
-    
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+        // Assuming roles are stored as a comma-separated string in the OurUsers class
+        // Split the roles string and create GrantedAuthority objects
+        return Collections.singleton(() -> user.getRoles());
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return user.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return true; // Assuming accounts do not expire
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return true; // Assuming accounts are not locked
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return true; // Assuming credentials do not expire
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return true; // Assuming accounts are always enabled
     }
     
-    public boolean hasSuperAdminRole() {
-        return this.roles.stream().anyMatch(role -> role.getAuthority().equals("SUPERADMIN"));
+    // Custom method to check if the user has a specific role
+    public boolean hasRole(String role) {
+        return getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals(role));
     }
 }

@@ -15,36 +15,39 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.ts.dao.OurUsersRepository;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/user/save", "/product/all").permitAll()
-				.anyRequest().authenticated()).httpBasic(withDefaults()).formLogin(withDefaults())
-				.csrf(AbstractHttpConfigurer::disable);
-		return http.build();
+    private final OurUsersRepository ourUsersRepository;
+    private final PasswordEncoder passwordEncoder;
 
-	}
+    public SecurityConfig(OurUsersRepository ourUsersRepository, PasswordEncoder passwordEncoder) {
+        this.ourUsersRepository = ourUsersRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-	@Bean
-	public UserDetailsService userDetailsService() {
-		return new OurUserInfoUserDetailsService();
-	}
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/user/save", "/product/all").permitAll()
+                .anyRequest().authenticated()).httpBasic(withDefaults()).formLogin(withDefaults())
+                .csrf(AbstractHttpConfigurer::disable);
+        return http.build();
+    }
 
-	@Bean
-	public AuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-		daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-		return daoAuthenticationProvider;
-	}
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new OurUserInfoUserDetailsService(ourUsersRepository, passwordEncoder);
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        return daoAuthenticationProvider;
+    }
 }

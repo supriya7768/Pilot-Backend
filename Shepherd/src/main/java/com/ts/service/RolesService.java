@@ -27,7 +27,7 @@ public class RolesService {
 		OurUserInfoDetails userDetails = (OurUserInfoDetails) authentication.getPrincipal();
 
 		// Check if user exists and their role is SUPERADMIN
-		if (userDetails != null && userDetails.hasSuperAdminRole()) {
+		if (userDetails != null && userDetails.hasRole(role.getRoleType())) {
 			if (rr.findByRoleType(role.getRoleType()).isPresent()) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Role already exists");
 			} else {
