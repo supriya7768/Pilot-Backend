@@ -14,4 +14,6 @@ public interface OurUsersRepository extends JpaRepository<OurUsers, Integer> {
 	OurUsers findByEmailAndPassword(String email, String password);
 
 	boolean existsByRolesContainingIgnoreCase(String role);
+
+	OurUsers findUserByEmail(String email);
 }

@@ -28,7 +28,7 @@ public class OurUsers {
 	private String email;
 	private String password;
 	private String roles;
-	
+
 //	@OneToOne
 //	private Roles role;
 }

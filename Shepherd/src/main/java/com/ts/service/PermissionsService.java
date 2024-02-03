@@ -27,7 +27,7 @@ public class PermissionsService {
 		OurUserInfoDetails userDetails = (OurUserInfoDetails) authentication.getPrincipal();
 
 		// Check if user exists and their role is SUPERADMIN
-		if (userDetails != null && userDetails.hasSuperAdminRole()) {
+		if (userDetails != null) {
 			try {
 				pr.save(permission);
 				return ResponseEntity.ok("Adding Permission: " + permission.getPermissionType());

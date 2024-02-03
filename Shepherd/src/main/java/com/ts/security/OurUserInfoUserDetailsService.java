@@ -2,31 +2,42 @@ package com.ts.security;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.ts.dao.OurUsersRepository;
 import com.ts.model.OurUsers;
 
-@Configuration
+@Service
 public class OurUserInfoUserDetailsService implements UserDetailsService {
-    @Autowired
-    private OurUsersRepository ourUserRepository;
+
+    private final OurUsersRepository ourUsersRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public OurUserInfoUserDetailsService(OurUsersRepository ourUsersRepository, PasswordEncoder passwordEncoder) {
+        this.ourUsersRepository = ourUsersRepository;
+        this.passwordEncoder = passwordEncoder;
+
+        // Check if the table is empty
+        if (ourUsersRepository.count() == 0) {
+            // Create and save the default SUPERADMIN user with hashed password
+            OurUsers defaultSuperAdmin = new OurUsers();
+            defaultSuperAdmin.setUserName("Kirankumar Pal");
+            defaultSuperAdmin.setEmail("kp@gmail.com");
+            defaultSuperAdmin.setPassword(passwordEncoder.encode("kiran")); // Hash the password
+            defaultSuperAdmin.setRoles("SUPERADMIN");
+            ourUsersRepository.save(defaultSuperAdmin);
+        }
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<OurUsers> user = ourUserRepository.findByEmail(username);
-        OurUserInfoDetails userDetails = user.map(OurUserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User Does Not Exist"));
+        Optional<OurUsers> user = ourUsersRepository.findByEmail(username);
+        OurUsers ourUser = user.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Check if the user has SUPERADMIN role
-        if (!userDetails.hasSuperAdminRole()) {
-            throw new UsernameNotFoundException("User Does Not Have SUPERADMIN Role");
-        }
-
-        return userDetails;
+        return new OurUserInfoDetails(ourUser);
     }
 }
