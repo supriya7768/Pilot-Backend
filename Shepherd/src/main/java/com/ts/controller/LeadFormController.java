@@ -39,7 +39,6 @@ public class LeadFormController {
 	}
 
 	@GetMapping("/get-lead-data")
-	@ResponseBody
 	public List<LeadForm> getLeadData() {
 		List<LeadForm> leadData = ls.getAllLeadData();
 		return leadData;
