@@ -21,12 +21,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ts.model.Login;
 import com.ts.model.OurUsers;
+import com.ts.service.LoginService;
 import com.ts.service.OurUsersService;
 
 @CrossOrigin("*")
 @RestController
 public class OurUsersController {
+
+	@Autowired
+	private LoginService loginService;
 
 	@Autowired
 	OurUsersService ourUsersService;
@@ -74,7 +79,15 @@ public class OurUsersController {
 
 			if (ourUser.getRoles().contains("SUPERADMIN") && isSuperAdmin) {
 				OurUsers savedUser = ourUsersService.saveUser(ourUser);
+
 				if (savedUser != null) {
+					// Save user in Login table
+					Login login = new Login();
+					login.setUserName(savedUser.getUserName());
+					login.setEmail(savedUser.getEmail());
+					login.setPassword(savedUser.getPassword());
+					login.setRoles(savedUser.getRoles());
+					loginService.saveLogin(login);
 					return ResponseEntity.ok("User is saved");
 				} else {
 					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -89,6 +102,13 @@ public class OurUsersController {
 
 			OurUsers savedUser = ourUsersService.saveUser(ourUser);
 			if (savedUser != null) {
+				// Save user in Login table
+				Login login = new Login();
+				login.setUserName(savedUser.getUserName());
+				login.setEmail(savedUser.getEmail());
+				login.setPassword(savedUser.getPassword());
+				login.setRoles(savedUser.getRoles());
+				loginService.saveLogin(login);
 				return ResponseEntity.ok("User is saved");
 			} else {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -175,7 +195,7 @@ public class OurUsersController {
 		if (deleted) {
 			return ResponseEntity.ok("User deleted successfully");
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or cannot be deleted");
 		}
 	}
 
