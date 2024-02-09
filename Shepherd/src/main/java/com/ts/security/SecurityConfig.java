@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.ts.dao.LoginRepository;
 import com.ts.dao.OurUsersRepository;
 import com.ts.dao.RolesRepository;
 
@@ -26,12 +27,14 @@ public class SecurityConfig {
 	private final OurUsersRepository ourUsersRepository;
 	private final RolesRepository rolesRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final LoginRepository loginRepository;
 
 	public SecurityConfig(OurUsersRepository ourUsersRepository, RolesRepository rolesRepository,
-			PasswordEncoder passwordEncoder) {
+			PasswordEncoder passwordEncoder, LoginRepository loginRepository) {
 		this.ourUsersRepository = ourUsersRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.rolesRepository = rolesRepository;
+		this.loginRepository = loginRepository;
 	}
 
 	@Bean
@@ -44,7 +47,7 @@ public class SecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new OurUserInfoUserDetailsService(ourUsersRepository, rolesRepository, passwordEncoder);
+		return new OurUserInfoUserDetailsService(ourUsersRepository, rolesRepository, passwordEncoder, loginRepository);
 	}
 
 	@Bean

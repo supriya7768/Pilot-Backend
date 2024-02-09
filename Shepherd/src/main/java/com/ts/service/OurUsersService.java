@@ -88,4 +88,18 @@ public class OurUsersService {
 		return ourUserRepository.findUserByEmail(email);
 	}
 
+	public Optional<OurUsers> findUserByEmailForLogin(String email) {
+		return ourUserRepository.findByEmail(email);
+	}
+	
+	@Transactional
+    public void updatePasswordInOurUsers(String email, String newPassword) {
+        Optional<OurUsers> userOptional = ourUserRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            OurUsers user = userOptional.get();
+            user.setPassword(newPassword);
+            ourUserRepository.save(user);
+        }
+    }
+
 }
