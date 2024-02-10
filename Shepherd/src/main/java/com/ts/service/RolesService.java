@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.ts.dao.Role_PermissionsRepository;
 import com.ts.dao.RolesRepository;
 import com.ts.model.Roles;
 import com.ts.security.OurUserInfoDetails;
@@ -19,9 +18,6 @@ public class RolesService {
 
 	@Autowired
 	RolesRepository rr;
-
-	@Autowired
-	Role_PermissionsRepository rpRepository;
 
 	// Import statements...
 
@@ -73,25 +69,26 @@ public class RolesService {
 	}
 
 	public ResponseEntity<String> deleteRole(String roleType, Authentication authentication) {
-	    OurUserInfoDetails userDetails = (OurUserInfoDetails) authentication.getPrincipal();
-	    // Check if user has SUPERADMIN authority
-	    if (userDetails != null && userDetails.hasRole("SUPERADMIN")) {
-	        // Retrieve existing role by role type
-	        Optional<Roles> optionalRole = rr.findByRoleType(roleType);
-	        if (optionalRole.isPresent()) {
-	            Roles existingRole = optionalRole.get();
-	            // Check if the existing role type is SUPERADMIN
-	            if (existingRole.getRoleType().equals("SUPERADMIN")) {
-	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not permitted to delete SUPERADMIN role");
-	            }
-	            // Delete the role
-	            rr.delete(existingRole);
-	            return ResponseEntity.ok("Role deleted successfully");
-	        } else {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found");
-	        }
-	    } else {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to delete roles");
-	    }
+		OurUserInfoDetails userDetails = (OurUserInfoDetails) authentication.getPrincipal();
+		// Check if user has SUPERADMIN authority
+		if (userDetails != null && userDetails.hasRole("SUPERADMIN")) {
+			// Retrieve existing role by role type
+			Optional<Roles> optionalRole = rr.findByRoleType(roleType);
+			if (optionalRole.isPresent()) {
+				Roles existingRole = optionalRole.get();
+				// Check if the existing role type is SUPERADMIN
+				if (existingRole.getRoleType().equals("SUPERADMIN")) {
+					return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+							.body("You are not permitted to delete SUPERADMIN role");
+				}
+				// Delete the role
+				rr.delete(existingRole);
+				return ResponseEntity.ok("Role deleted successfully");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to delete roles");
+		}
 	}
 }
