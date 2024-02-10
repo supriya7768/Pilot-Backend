@@ -57,7 +57,5 @@ public class LeadForm {
 
 	@OneToMany(mappedBy = "leadForm", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<Invoice> invoices;
-
-	
+	private List<Invoice> invoices;	
 }
