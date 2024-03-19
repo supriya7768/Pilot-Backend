@@ -1,7 +1,5 @@
 package com.ts.model;
 
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Component
 @Table(name = "ourusers")
 public class OurUsers {
 
@@ -29,6 +26,4 @@ public class OurUsers {
 	private String password;
 	private String roles;
 
-//	@OneToOne
-//	private Roles role;
 }
