@@ -134,6 +134,21 @@ public class LeadFormService {
 //            return lr.findByCreatedAtBetween(startDate, endDate);
 //        }
 //    }
+	
+	 public String getLeadByEmail(String email) {
+	        // Implement the business logic to check if the email already exists
+	        // You can use leadRepository to interact with the database
+	        // For example:
+	        // Lead lead = leadRepository.findByEmail(email);
+	        // if (lead != null) {
+	        //     return "Email id is already present";
+	        // } else {
+	        //     return "Email id is not present";
+	        // }
+
+	        // For simplicity, returning a placeholder message
+	        return "Email id is not present";
+	    }
 
 
 
