@@ -3,6 +3,8 @@ package com.ts.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,10 @@ public class LeadFormService {
 	FollowCommentRepository followCommentRepository;
 
 	public String addLead(LeadForm leadForm) {
-		// Check if the email or mobile already exists
-		if (lr.findByEmail(leadForm.getEmail()).isPresent() || lr.findByMobile(leadForm.getMobile()).isPresent()) {
-			return "Entry not done. Email or mobile already exists.";
+		// Check if the email or mobile already exists or if they are invalid
+		if (lr.findByEmail(leadForm.getEmail()).isPresent() || lr.findByMobile(leadForm.getMobile()).isPresent()
+				|| !isValidEmail(leadForm.getEmail()) || !isValidMobile(leadForm.getMobile())) {
+			return "Entry not done. Email or mobile is invalid or already exists.";
 		} else {
 			// Save the LeadForm to get the generated ID
 			LeadForm savedLeadForm = lr.save(leadForm);
@@ -55,6 +58,22 @@ public class LeadFormService {
 
 			return savedLeadForm.getName() + " added successfully.";
 		}
+	}
+
+	private boolean isValidEmail(String email) {
+		// Check if email is valid
+		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+		Pattern pattern = Pattern.compile(emailRegex);
+		Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
+	}
+
+	private boolean isValidMobile(String mobile) {
+		// Check if mobile number is 10 digits starting with 7, 8, or 9
+		String mobileRegex = "^[7-9]\\d{9}$";
+		Pattern pattern = Pattern.compile(mobileRegex);
+		Matcher matcher = pattern.matcher(mobile);
+		return matcher.matches();
 	}
 
 	public List<LeadForm> getAllLeadData() {
@@ -116,11 +135,15 @@ public class LeadFormService {
 		// Save the lead form with the new comment and follow-up
 		lr.save(leadForm);
 	}
-	
-	public Long getTotalId(){
+
+	public Long getTotalId() {
 		return lr.count();
 	}
-	
+
+	public String getLeadByEmail(String email) {
+		return "Email id is not present";
+	}
+
 //	public List<LeadForm> getAllLeadDataForMonth(String monthYear, String status) {
 //        int month = Integer.parseInt(monthYear.split("-")[1]);
 //        int year = Integer.parseInt(monthYear.split("-")[0]);
@@ -134,7 +157,5 @@ public class LeadFormService {
 //            return lr.findByCreatedAtBetween(startDate, endDate);
 //        }
 //    }
-
-
 
 }
