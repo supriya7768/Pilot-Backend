@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class OurUsers {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // identity gives additional use that it generates a primary key.
 	private int id;
 	private String userName;
 	@Column(unique = true)

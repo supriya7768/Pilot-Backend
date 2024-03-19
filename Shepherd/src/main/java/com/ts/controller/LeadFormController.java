@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ts.model.LeadForm;
@@ -34,25 +34,28 @@ public class LeadFormController {
 	LeadFormService ls;
 
 	@PostMapping("/add-lead")
+//	@PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public String addLead(@RequestBody LeadForm leadForm) {
 		return ls.addLead(leadForm);
 	}
 
 	@GetMapping("/get-lead-data")
-	@ResponseBody
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public List<LeadForm> getLeadData() {
 		List<LeadForm> leadData = ls.getAllLeadData();
 		return leadData;
 	}
 
 	@GetMapping("/get-lead-data-dashboard")
-	@ResponseBody
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public List<LeadForm> getLeadDataDashboard() {
 		List<LeadForm> leadData = ls.getAllLeadData();
 		return leadData;
 	}
 
 	@PutMapping("/update-lead/{id}")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public ResponseEntity<Map<String, String>> updateLeadStatus(@PathVariable Long id,
 			@RequestBody Map<String, String> requestBody) {
 		try {
@@ -75,140 +78,133 @@ public class LeadFormController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-		
+
 	@GetMapping("/get-all-lead-counts")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public Map<String, Integer> getAllLeadCountsByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
+		// Get the current month
+		YearMonth currentMonth = YearMonth.now();
 
-	    // Fetch all lead data
-	    List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
+		// Fetch all lead data
+		List<LeadForm> allLeadData = ls.getAllLeadDataDashboard();
 
-	    // Filter out leads with status "Deal Done" or "Close" for the current month
-	    List<LeadForm> filteredLeads = allLeadData.stream()
-	            .filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
-	            .filter(lead -> {
-	                String followDateStr = lead.getFollow();
-	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
-	                    return false; // Skip leads with empty or whitespace date strings
-	                }
+		// Filter out leads with status "Deal Done" or "Close" for the current month
+		List<LeadForm> filteredLeads = allLeadData.stream()
+				.filter(lead -> !"Deal Done".equals(lead.getStatus()) && !"Close".equals(lead.getStatus()))
+				.filter(lead -> {
+					String followDateStr = lead.getFollow();
+					if (followDateStr == null || followDateStr.trim().isEmpty()) {
+						return false; // Skip leads with empty or whitespace date strings
+					}
 
-	                LocalDate leadDate;
-	                try {
-	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
-	                } catch (DateTimeParseException e) {
-	                    return false; // Skip leads with invalid date strings
-	                }
+					LocalDate leadDate;
+					try {
+						leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+					} catch (DateTimeParseException e) {
+						return false; // Skip leads with invalid date strings
+					}
 
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .collect(Collectors.toList());
+					return leadDate.getMonth() == currentMonth.getMonth();
+				}).collect(Collectors.toList());
 
-	    // Count leads for each date
-	    Map<String, Integer> leadCounts = filteredLeads.stream()
-	            .collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
+		// Count leads for each date
+		Map<String, Integer> leadCounts = filteredLeads.stream()
+				.collect(Collectors.groupingBy(LeadForm::getFollow, Collectors.summingInt(lead -> 1)));
 
-	    return leadCounts;
+		return leadCounts;
 	}
 
-	// The other two methods (getTotalLeadCountsByMonth and getTotalLeadCountsDoneByMonth) can use similar modifications.
-
+	// The other two methods (getTotalLeadCountsByMonth and
+	// getTotalLeadCountsDoneByMonth) can use similar modifications.
 
 	@GetMapping("/get-total-lead-counts")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public Long getTotalLeadCountsByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
+		// Get the current month
+		YearMonth currentMonth = YearMonth.now();
 
-	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+		List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
 
-	    // Filter leads by current month and count them
-	    long count = leads.stream()
-	            .filter(lead -> {
-	                String followDateStr = lead.getFollow();
-	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
-	                    return false; // Skip leads with empty or whitespace date strings
-	                }
+		// Filter leads by current month and count them
+		long count = leads.stream().filter(lead -> {
+			String followDateStr = lead.getFollow();
+			if (followDateStr == null || followDateStr.trim().isEmpty()) {
+				return false; // Skip leads with empty or whitespace date strings
+			}
 
-	                LocalDate leadDate;
-	                try {
-	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
-	                } catch (DateTimeParseException e) {
-	                    return false; // Skip leads with invalid date strings
-	                }
+			LocalDate leadDate;
+			try {
+				leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+			} catch (DateTimeParseException e) {
+				return false; // Skip leads with invalid date strings
+			}
 
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .count();
+			return leadDate.getMonth() == currentMonth.getMonth();
+		}).count();
 
-	    return count;
+		return count;
 	}
 
 	@GetMapping("/get-total-lead-counts-done")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public Long getTotalLeadCountsDoneByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
+		// Get the current month
+		YearMonth currentMonth = YearMonth.now();
 
-	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+		List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
 
-	    // Filter leads with status "Deal Done" by current month and count them
-	    long count = leads.stream()
-	            .filter(lead -> "Deal Done".equals(lead.getStatus()))
-	            .filter(lead -> {
-	                String followDateStr = lead.getFollow();
-	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
-	                    return false; // Skip leads with empty or whitespace date strings
-	                }
+		// Filter leads with status "Deal Done" by current month and count them
+		long count = leads.stream().filter(lead -> "Deal Done".equals(lead.getStatus())).filter(lead -> {
+			String followDateStr = lead.getFollow();
+			if (followDateStr == null || followDateStr.trim().isEmpty()) {
+				return false; // Skip leads with empty or whitespace date strings
+			}
 
-	                LocalDate leadDate;
-	                try {
-	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
-	                } catch (DateTimeParseException e) {
-	                    return false; // Skip leads with invalid date strings
-	                }
+			LocalDate leadDate;
+			try {
+				leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+			} catch (DateTimeParseException e) {
+				return false; // Skip leads with invalid date strings
+			}
 
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .count();
+			return leadDate.getMonth() == currentMonth.getMonth();
+		}).count();
 
-	    return count;
+		return count;
 	}
-
 
 	@GetMapping("/get-total-lead-counts-close")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public Long getTotalLeadCountsCloseByMonth() {
-	    // Get the current month
-	    YearMonth currentMonth = YearMonth.now();
+		// Get the current month
+		YearMonth currentMonth = YearMonth.now();
 
-	    List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
+		List<LeadForm> leads = ls.getAllLeadDataDashboard(); // Modify accordingly
 
-	    // Filter leads with status "Close" by current month and count them
-	    long count = leads.stream()
-	            .filter(lead -> "Close".equals(lead.getStatus()))
-	            .filter(lead -> {
-	                String followDateStr = lead.getFollow();
-	                if (followDateStr == null || followDateStr.trim().isEmpty()) {
-	                    return false; // Skip leads with empty or whitespace date strings
-	                }
+		// Filter leads with status "Close" by current month and count them
+		long count = leads.stream().filter(lead -> "Close".equals(lead.getStatus())).filter(lead -> {
+			String followDateStr = lead.getFollow();
+			if (followDateStr == null || followDateStr.trim().isEmpty()) {
+				return false; // Skip leads with empty or whitespace date strings
+			}
 
-	                LocalDate leadDate;
-	                try {
-	                    leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
-	                } catch (DateTimeParseException e) {
-	                    return false; // Skip leads with invalid date strings
-	                }
+			LocalDate leadDate;
+			try {
+				leadDate = LocalDate.parse(followDateStr); // Assuming "yyyy-MM-dd" format
+			} catch (DateTimeParseException e) {
+				return false; // Skip leads with invalid date strings
+			}
 
-	                return leadDate.getMonth() == currentMonth.getMonth();
-	            })
-	            .count();
+			return leadDate.getMonth() == currentMonth.getMonth();
+		}).count();
 
-	    return count;
+		return count;
 	}
 
+	// ===============================================================================================
 
-	
-	//===============================================================================================
-	
 	@PostMapping("/save-edits/{id}")
+	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public ResponseEntity<String> saveEdits(@PathVariable Long id, @RequestParam String newFollowUpDate,
 			@RequestParam String newComment, @RequestParam String changeStatus) {
 		try {
