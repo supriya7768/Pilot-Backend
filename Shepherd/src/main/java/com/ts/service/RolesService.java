@@ -19,8 +19,6 @@ public class RolesService {
 	@Autowired
 	RolesRepository rr;
 
-	// Import statements...
-
 	public ResponseEntity<String> addRole(Roles role, Authentication authentication) {
 		// Retrieve user details based on the provided email
 		OurUserInfoDetails userDetails = (OurUserInfoDetails) authentication.getPrincipal();
