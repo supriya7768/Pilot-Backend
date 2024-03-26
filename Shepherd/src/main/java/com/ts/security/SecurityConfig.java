@@ -39,7 +39,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/user/save", "/product/all").permitAll()
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/user/save", "/login/loginByEmail").permitAll()
 				.anyRequest().authenticated()).httpBasic(withDefaults()).formLogin(withDefaults())
 				.csrf(AbstractHttpConfigurer::disable);
 		return http.build();
@@ -57,4 +57,9 @@ public class SecurityConfig {
 		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 		return daoAuthenticationProvider;
 	}
+	
+	@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
