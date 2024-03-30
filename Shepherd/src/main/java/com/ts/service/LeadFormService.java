@@ -140,9 +140,6 @@ public class LeadFormService {
 		return lr.count();
 	}
 
-	public String getLeadByEmail(String email) {
-		return "Email id is not present";
-	}
 
 //	public List<LeadForm> getAllLeadDataForMonth(String monthYear, String status) {
 //        int month = Integer.parseInt(monthYear.split("-")[1]);
