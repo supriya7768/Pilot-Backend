@@ -40,11 +40,6 @@ public class LeadFormController {
 		return ls.addLead(leadForm);
 	}
 
-	@GetMapping("/getLeadByEmail")
-	public String getLeadByEmail(@RequestParam String email) {
-		return ls.getLeadByEmail(email);
-	}
-
 	@GetMapping("/get-lead-data")
 	@PreAuthorize("hasAuthority('SUPERADMIN')")
 	public List<LeadForm> getLeadData() {
